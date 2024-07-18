@@ -1,23 +1,20 @@
 package org.demee.avrogator;
 
+import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import lombok.Setter;
+
 
 import java.io.File;
 
-@Controller
-public class AvrogatorController {
-    AvroParser parser;
+
+public class AvrogatorController  {
+    @Inject private AvroParser parser;
 
     @FXML
     private MenuItem openFileMenuItem;
-
-    public AvrogatorController (@Autowired AvroParser parser) {
-        this.parser = parser;
-    }
 
     @FXML
     public void openFile() {
