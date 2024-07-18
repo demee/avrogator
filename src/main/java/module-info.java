@@ -11,7 +11,7 @@ module org.demee.avrogator {
     requires com.google.guice;
     requires lombok;
 
-    opens org.demee.avrogator to javafx.fxml;
+    opens org.demee.avrogator to javafx.fxml, com.google.guice;
     exports org.demee.avrogator;
     exports org.demee.avrogator.di;
     opens org.demee.avrogator.di to javafx.fxml;
