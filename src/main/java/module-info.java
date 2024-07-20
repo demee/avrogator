@@ -7,7 +7,8 @@ module org.demee.avrogator {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
-    requires org.apache.avro;
+    requires transitive javafx.graphics;
+    requires transitive org.apache.avro;
     requires lombok;
 
     opens org.demee.avrogator to javafx.fxml;

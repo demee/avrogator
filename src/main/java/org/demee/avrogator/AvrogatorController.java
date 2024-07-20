@@ -1,17 +1,21 @@
 package org.demee.avrogator;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericRecord;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericRecord;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
 
 
 public class AvrogatorController {
@@ -27,6 +31,8 @@ public class AvrogatorController {
     private Label fileNameLabel;
     @FXML
     private TableView<Map<String, Object>> tableView;
+    @FXML 
+    private TableView<Map<String, Object>> schemaTableView;
 
     @FXML
     public void openFile() {
@@ -44,6 +50,8 @@ public class AvrogatorController {
     private void resetData() {
         tableView.getColumns().clear();
         tableView.getItems().clear();
+        schemaTableView.getItems().clear();
+        schemaTableView.getColumns().clear();
     }
 
     private void updateUI(File file) {
@@ -83,7 +91,28 @@ public class AvrogatorController {
 
     private void renderSchema(File file) {
         Schema schema = parser.getSchema(file);
+        createSchemaColumns();
+      
+        schema.getFields().forEach(field -> {
+            Map<String, Object> row = new HashMap<>();
+            row.put("name", field.name());
+            if (field.schema().getType().equals(Schema.Type.UNION)) {
+                row.put("type", field.schema().getTypes().toString());
+            } else {
+                row.put("type", field.schema().getType().toString().toLowerCase());
+            }
+            schemaTableView.getItems().add(row);
+        });
 
+    }
+
+    private void createSchemaColumns() {
+        TableColumn<Map<String, Object>, String> nameColumn = new TableColumn<>("name");
+        nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get("name").toString()));
+        schemaTableView.getColumns().add(nameColumn);
+        TableColumn<Map<String, Object>, String> typeColumn = new TableColumn<>("type");
+        typeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get("type").toString()));
+        schemaTableView.getColumns().add(typeColumn);
 
     }
 

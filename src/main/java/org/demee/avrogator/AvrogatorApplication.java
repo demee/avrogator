@@ -1,12 +1,12 @@
 package org.demee.avrogator;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.NoArgsConstructor;
-
-import java.io.IOException;
 
 @NoArgsConstructor
 public class AvrogatorApplication extends Application {
@@ -21,5 +21,9 @@ public class AvrogatorApplication extends Application {
 
     public void launchApplication(String[] args) {
         launch(args);
+    }
+
+    public static void main(String[] args) {
+        new AvrogatorApplication().launchApplication(args);
     }
 }
