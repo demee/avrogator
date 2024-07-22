@@ -1,14 +1,5 @@
 package org.demee.avrogator;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericRecord;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,6 +7,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericRecord;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AvrogatorController {
@@ -29,6 +28,8 @@ public class AvrogatorController {
     private Button openFileButton;
     @FXML
     private Label fileNameLabel;
+    @FXML
+    private Label totalCountLabel;
     @FXML
     private TableView<Map<String, Object>> tableView;
     @FXML 
@@ -61,6 +62,11 @@ public class AvrogatorController {
     private void loadFile(File file) {
         renderSchema(file);
         renderRecords(file);
+        renderTotalCount();
+    }
+
+    private void renderTotalCount() {
+        totalCountLabel.setText("Total Count: " + tableView.getItems().size());
     }
 
     private void renderRecords(File file) {
