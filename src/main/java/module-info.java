@@ -10,6 +10,10 @@ module org.demee.avrogator {
     requires transitive javafx.graphics;
     requires transitive org.apache.avro;
     requires lombok;
+    requires java.sql;
+    requires calcite.core;
+    requires calcite.file;
+    requires calcite.linq4j;
 
     opens org.demee.avrogator to javafx.fxml;
     exports org.demee.avrogator;
