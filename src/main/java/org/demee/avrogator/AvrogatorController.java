@@ -52,6 +52,11 @@ public class AvrogatorController {
         // open javafx select file dialog
         file = getFile();
         sqlInterface = new AvroSqlInterface(file.getAbsolutePath());
+        try {
+            sqlInterface.init();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (file != null) {
             resetData();
             updateUI();
@@ -74,6 +79,7 @@ public class AvrogatorController {
 
     private void loadFile() {
         renderSchema();
+        renderColumns();
         renderPage();
         renderTotalCount();
     }
@@ -81,7 +87,7 @@ public class AvrogatorController {
     private void renderTotalCount() {
 
         try {
-            sqlInterface.init();
+
             ResultSet resultSet = sqlInterface.executeQuery("SELECT COUNT(*) FROM AVRO.AVRO_TABLE");
             if (resultSet.next()) {
                 totalCountLabel.setText("Total Count: " + resultSet.getInt(1));
@@ -105,8 +111,7 @@ public class AvrogatorController {
     }
 
     private void displayResults(ResultSet rs) throws Exception {
-        tableView.getColumns().clear();
-        tableView.getItems().clear();
+
         Schema schema = parser.getSchema(file);
 
         ResultSetMetaData metaData = rs.getMetaData();
@@ -115,8 +120,8 @@ public class AvrogatorController {
 
         while (rs.next()) {
             Map<String, Object> row = new HashMap<>();
-            for (int i = 1; i <= columnCount; i++) {
-                row.put(schema.getFields().get(i).name(), rs.getObject(i));
+            for (int i = 0; i < columnCount; i++) {
+                row.put(schema.getFields().get(i).name(), rs.getObject(i+1));
             }
             tableView.getItems().add(row);
         }
@@ -135,7 +140,7 @@ public class AvrogatorController {
 
     private void renderRecords(File file) {
         Schema schema = parser.getSchema(file);
-        renderColumns(schema);
+        renderColumns();
 
         ArrayList<GenericRecord> records = parser.parse(file);
 
@@ -148,7 +153,8 @@ public class AvrogatorController {
         });
     }
 
-    private void renderColumns(Schema schema) {
+    private void renderColumns() {
+        Schema schema = parser.getSchema(file);
         schema.getFields().forEach(field -> {
             TableColumn<Map<String, Object>, String> column = new TableColumn<>(field.name());
             column.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(field.name()).toString()));
