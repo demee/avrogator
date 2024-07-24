@@ -3,6 +3,7 @@
 Minimalistic avro file browser. 
 
 v.0.0.1: 
+* Show first level of schema ( deeper levels in json format )
 * Can open any arbitrary avro file size, limited only by your computer disk space / memory
 * Paginate 1000 elements per page
 * Shows total rows count
