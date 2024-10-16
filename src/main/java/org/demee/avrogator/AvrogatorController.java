@@ -2,10 +2,7 @@ package org.demee.avrogator;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
@@ -21,6 +18,10 @@ import java.util.Map;
 
 public class AvrogatorController {
     AvroParser parser;
+    @FXML
+    TextArea selectTextArea;
+    @FXML
+    TextArea whereTextArea;
     AvroSqlInterface sqlInterface;
     File file;
     long currentPage = 0;
@@ -184,6 +185,19 @@ public class AvrogatorController {
             schemaTableView.getItems().add(row);
         });
 
+    }
+
+    public void queryAvro() {
+        String select = selectTextArea.getText();
+        String where = whereTextArea.getText();
+        String query = "SELECT " + select + " FROM AVRO.AVRO_TABLE WHERE " + where;
+        try {
+            ResultSet resultSet = sqlInterface.executeQuery(query);
+            tableView.getItems().clear();
+            displayResults(resultSet);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void createSchemaColumns() {
