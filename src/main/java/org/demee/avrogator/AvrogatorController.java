@@ -40,7 +40,7 @@ public class AvrogatorController {
     private Button previousPageButton;
 
     
-    public AvrogatorController() {;
+    public AvrogatorController() {
         parser = new AvroParser();
     }
 
