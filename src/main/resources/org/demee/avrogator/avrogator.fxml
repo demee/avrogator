@@ -33,10 +33,10 @@
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="1024.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <TextArea fx:id="whereTextArea" layoutX="14.0" layoutY="159.0" prefHeight="110.0" prefWidth="1000.0" text="WHERE 1=1" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="159.0" />
-                              <TextArea fx:id="selectTextArea" layoutX="14.0" layoutY="14.0" prefHeight="110.0" prefWidth="1000.0" text="* " AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="14.0" />
+                              <TextArea fx:id="whereTextArea" layoutX="14.0" layoutY="159.0" prefHeight="110.0" prefWidth="1000.0" text="WHERE 1=1" accessibleText="Where clause input" accessibleHelp="Enter your filter conditions" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="159.0" />
+                              <TextArea fx:id="selectTextArea" layoutX="14.0" layoutY="14.0" prefHeight="110.0" prefWidth="1000.0" text="* " accessibleText="Select clause input" accessibleHelp="Enter the columns you want to select" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="14.0" />
                               <Label layoutX="14.0" layoutY="133.0" text="FROM AVRO" />
-                              <Button layoutX="971.0" layoutY="280.0" mnemonicParsing="false" onAction="#runQuery" text="Run" AnchorPane.rightAnchor="15.666666666666664" AnchorPane.topAnchor="280.0" />
+                              <Button layoutX="971.0" layoutY="280.0" mnemonicParsing="true" onAction="#runQuery" text="Run" accessibleText="Execute query" AnchorPane.rightAnchor="15.666666666666664" AnchorPane.topAnchor="280.0" />
                               <Label layoutX="14.0" layoutY="280.0" text="LIMIT 1000" />
                            </children>
                         </AnchorPane>
