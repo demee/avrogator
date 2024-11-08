@@ -34,9 +34,9 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="1024.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <TextArea fx:id="whereTextArea" layoutX="14.0" layoutY="159.0" prefHeight="110.0" prefWidth="1000.0" text="WHERE 1=1" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="159.0" />
-                              <TextArea fx:id="selectTextArea" layoutX="14.0" layoutY="14.0" prefHeight="110.0" prefWidth="1000.0" text="SELECT * " AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="14.0" />
+                              <TextArea fx:id="selectTextArea" layoutX="14.0" layoutY="14.0" prefHeight="110.0" prefWidth="1000.0" text="* " AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="14.0" />
                               <Label layoutX="14.0" layoutY="133.0" text="FROM AVRO" />
-                              <Button layoutX="971.0" layoutY="280.0" mnemonicParsing="false" onAction="#queryAvro" text="Run" AnchorPane.rightAnchor="15.666666666666664" AnchorPane.topAnchor="280.0" />
+                              <Button layoutX="971.0" layoutY="280.0" mnemonicParsing="false" onAction="#runQuery" text="Run" AnchorPane.rightAnchor="15.666666666666664" AnchorPane.topAnchor="280.0" />
                               <Label layoutX="14.0" layoutY="280.0" text="LIMIT 1000" />
                            </children>
                         </AnchorPane>
@@ -56,7 +56,7 @@
       <ToolBar layoutY="1.0" prefHeight="40.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <Button fx:id="openFileButton" mnemonicParsing="false" onAction="#openFile" text="Open File" />
-            <Label fx:id="fileNameLabel" text="No file">
+            <Label fx:id="fileNameLabel" text="No file opened">
                <padding>
                   <Insets left="20.0" />
                </padding>
