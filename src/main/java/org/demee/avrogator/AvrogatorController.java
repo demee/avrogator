@@ -2,33 +2,26 @@ package org.demee.avrogator;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericRecord;
-
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class AvrogatorController {
     AvroParser parser;
-    AvroSqlInterface sqlInterface;
+    AvroSqlInterface sqlInterface;  // Initialized when opening a file
     File file;
     long currentPage = 0;
 
-    public AvrogatorController() {;
-        parser = new AvroParser();
-    }
-
+    @FXML
+    TextArea selectTextArea;
+    @FXML
+    TextArea whereTextArea;
     @FXML
     private Button openFileButton;
     @FXML
@@ -39,7 +32,6 @@ public class AvrogatorController {
     private TableView<Map<String, Object>> tableView;
     @FXML 
     private TableView<Map<String, Object>> schemaTableView;
-
     @FXML
     private Label pageLabel;
     @FXML
@@ -47,47 +39,54 @@ public class AvrogatorController {
     @FXML
     private Button previousPageButton;
 
+    
+    public AvrogatorController() {
+        parser = new AvroParser();
+    }
+
     @FXML
-    public void openFile() {
-        // open javafx select file dialog
-        file = getFile();
-        sqlInterface = new AvroSqlInterface(file.getAbsolutePath());
-        try {
-            sqlInterface.init();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void openFile() throws Exception {
+        file = getFile();  // open javafx select file dialog
+        initSqlInterface();
         if (file != null) {
             resetData();
-            updateUI();
-            loadFile();
+            updateUIElements();
+            renderSchema();
+            renderPage();
+            renderTotalCount();
         } else {
-            System.out.println("No file selected");
+            fileNameLabel.setText("No file opened");
         }
     }
 
-    private void resetData() {
+    @FXML
+    public void runQuery() {
+        currentPage = 0;
+        renderPage();
+    }
+
+    private void initSqlInterface() throws Exception {
+        if (sqlInterface != null) { // close previous connection
+            sqlInterface.close();
+        }
+        sqlInterface = new AvroSqlInterface(file.getAbsolutePath());
+        sqlInterface.init();
+    }
+
+    private void resetData() throws Exception {
         tableView.getColumns().clear();
         tableView.getItems().clear();
         schemaTableView.getItems().clear();
         schemaTableView.getColumns().clear();
     }
 
-    private void updateUI() {
+    private void updateUIElements() {
         fileNameLabel.setText(file.getName());
     }
 
-    private void loadFile() {
-        renderSchema();
-        renderColumns();
-        renderPage();
-        renderTotalCount();
-    }
 
     private void renderTotalCount() {
-
         try {
-
             ResultSet resultSet = sqlInterface.executeQuery("SELECT COUNT(*) FROM AVRO.AVRO_TABLE");
             if (resultSet.next()) {
                 totalCountLabel.setText("Total Count: " + resultSet.getInt(1));
@@ -101,8 +100,12 @@ public class AvrogatorController {
     private void renderPage() {
         pageLabel.setText("Page: " + currentPage);
         tableView.getItems().clear();
+        String select = selectTextArea.getText();
+        String where = whereTextArea.getText();
+        String query = "SELECT " + select + " FROM AVRO.AVRO_TABLE " + where + " LIMIT 1000 OFFSET " + currentPage * 1000;
+        System.out.println(query);
         try {
-            ResultSet resultSet = sqlInterface.executeQuery("SELECT * FROM AVRO.AVRO_TABLE LIMIT 1000 OFFSET " + currentPage * 1000);
+            ResultSet resultSet = sqlInterface.executeQuery(query);
             // iterate over results and render in table based on schema
             displayResults(resultSet);
         } catch (Exception e) {
@@ -117,6 +120,18 @@ public class AvrogatorController {
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
 
+        if (tableView.getColumns().isEmpty()) {  // Only create columns if needed
+             for (int i = 1; i <= columnCount; i++) {
+                 TableColumn<Map<String, Object>, String> column = new TableColumn<>(metaData.getColumnName(i));
+                 final int columnIndex = i - 1;
+                 column.setCellValueFactory(param -> {
+                     Object value = param.getValue().get(schema.getFields().get(columnIndex).name());
+                     return new SimpleStringProperty(value != null ? value.toString() : "");
+                 });
+                 tableView.getColumns().add(column);
+             }
+        }
+        
 
         while (rs.next()) {
             Map<String, Object> row = new HashMap<>();
@@ -132,42 +147,16 @@ public class AvrogatorController {
         currentPage++;
         renderPage();
     }
+
     @FXML
     private void previousPage() {
         currentPage--;
+        if (currentPage < 0) {
+            currentPage = 0;
+        }
         renderPage();
     }
 
-    private void renderRecords(File file) {
-        Schema schema = parser.getSchema(file);
-        renderColumns();
-
-        ArrayList<GenericRecord> records = parser.parse(file);
-
-        sortRecords(records, schema);
-
-        records.forEach(record -> {
-            Map<String, Object> row = new HashMap<>();
-            schema.getFields().forEach(field -> row.put(field.name(), record.get(field.name()).toString()));
-            tableView.getItems().add(row);
-        });
-    }
-
-    private void renderColumns() {
-        Schema schema = parser.getSchema(file);
-        schema.getFields().forEach(field -> {
-            TableColumn<Map<String, Object>, String> column = new TableColumn<>(field.name());
-            column.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(field.name()).toString()));
-            tableView.getColumns().add(column);
-        });
-    }
-
-    private void sortRecords(ArrayList<GenericRecord> records, Schema schema) {
-        // Get fist column name
-        String firstColumnName = schema.getFields().get(0).name();
-        // sort records by app_name
-        records.sort(Comparator.comparing(r -> r.get(firstColumnName).toString()));
-    }
 
     private void renderSchema() {
         Schema schema = parser.getSchema(file);
