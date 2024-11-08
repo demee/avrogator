@@ -120,13 +120,16 @@ public class AvrogatorController {
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
 
-        tableView.getColumns().clear();
-        
-        for (int i = 1; i <= columnCount; i++) {
-            TableColumn<Map<String, Object>, String> column = new TableColumn<>(metaData.getColumnName(i));
-            final int columnIndex = i - 1;
-            column.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(schema.getFields().get(columnIndex).name()).toString()));
-            tableView.getColumns().add(column);
+        if (tableView.getColumns().isEmpty()) {  // Only create columns if needed
+             for (int i = 1; i <= columnCount; i++) {
+                 TableColumn<Map<String, Object>, String> column = new TableColumn<>(metaData.getColumnName(i));
+                 final int columnIndex = i - 1;
+                 column.setCellValueFactory(param -> {
+                     Object value = param.getValue().get(schema.getFields().get(columnIndex).name());
+                     return new SimpleStringProperty(value != null ? value.toString() : "");
+                 });
+                 tableView.getColumns().add(column);
+             }
         }
         
 
