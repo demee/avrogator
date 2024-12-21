@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,23 +34,29 @@ import java.util.Properties;
 public class AvroSqlInterface {
     private final String avroFilePath;
     private Connection connection;
+    private SchemaPlus avroSchema;
 
     public AvroSqlInterface(String avroFilePath) {
         this.avroFilePath = avroFilePath;
     }
 
     public void init() throws Exception {
-        Properties info = new Properties();
-        info.setProperty("lex", "JAVA");
-        connection = DriverManager.getConnection("jdbc:calcite:", info);
-        CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
-        SchemaPlus rootSchema = calciteConnection.getRootSchema();
+        SchemaPlus rootSchema = getRootSchema();
 
         Map<String, Object> operand = new HashMap<>();
         operand.put("avroFile", avroFilePath);
 
         SchemaFactory schemaFactory = new AvroSchemaFactory();
-        SchemaPlus avroSchema = rootSchema.add("AVRO", schemaFactory.create(rootSchema, "AVRO", operand));
+        avroSchema = rootSchema.add("AVRO", schemaFactory.create(rootSchema, "AVRO", operand));
+    }
+
+    private SchemaPlus getRootSchema() throws SQLException {
+        Properties info = new Properties();
+        info.setProperty("lex", "JAVA");
+        connection = DriverManager.getConnection("jdbc:calcite:", info);
+        CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
+        SchemaPlus rootSchema = calciteConnection.getRootSchema();
+        return rootSchema;
     }
 
     public ResultSet executeQuery(String sql) throws Exception {

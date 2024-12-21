@@ -19,10 +19,6 @@ public class AvrogatorController {
     long currentPage = 0;
 
     @FXML
-    TextArea selectTextArea;
-    @FXML
-    TextArea whereTextArea;
-    @FXML
     private Button openFileButton;
     @FXML
     private Label fileNameLabel;
@@ -100,9 +96,7 @@ public class AvrogatorController {
     private void renderPage() {
         pageLabel.setText("Page: " + currentPage);
         tableView.getItems().clear();
-        String select = selectTextArea.getText();
-        String where = whereTextArea.getText();
-        String query = "SELECT " + select + " FROM AVRO.AVRO_TABLE " + where + " LIMIT 1000 OFFSET " + currentPage * 1000;
+        String query = "SELECT * FROM AVRO.AVRO_TABLE WHERE 1=1 LIMIT 1000 OFFSET " + currentPage * 1000;
         System.out.println(query);
         try {
             ResultSet resultSet = sqlInterface.executeQuery(query);

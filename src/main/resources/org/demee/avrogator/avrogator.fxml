@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 
@@ -14,11 +13,11 @@
    <children>
       <TabPane layoutX="14.0" layoutY="41.333333333333336" prefHeight="559.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <tabs>
-          <Tab text="Data">
+          <Tab text="Browser">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="tableView" layoutX="1.0" layoutY="310.0" prefHeight="609.0" prefWidth="1024.0" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="310.0" />
+                        <TableView fx:id="tableView" layoutX="1.0" prefHeight="919.0" prefWidth="1024.0" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                         <AnchorPane layoutY="492.0" prefHeight="40.0" prefWidth="800.0" AnchorPane.bottomAnchor="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
                               <Label fx:id="totalCountLabel" text="Total Count: 0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -31,19 +30,10 @@
                               <Label fx:id="pageLabel" layoutX="227.0" layoutY="12.0" text="Page: 0" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="343.0" prefWidth="1024.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <TextArea fx:id="whereTextArea" layoutX="14.0" layoutY="159.0" prefHeight="110.0" prefWidth="1000.0" text="WHERE 1=1" accessibleText="Where clause input" accessibleHelp="Enter your filter conditions" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="159.0" />
-                              <TextArea fx:id="selectTextArea" layoutX="14.0" layoutY="14.0" prefHeight="110.0" prefWidth="1000.0" text="* " accessibleText="Select clause input" accessibleHelp="Enter the columns you want to select" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="14.0" />
-                              <Label layoutX="14.0" layoutY="133.0" text="FROM AVRO" />
-                              <Button layoutX="971.0" layoutY="280.0" mnemonicParsing="true" onAction="#runQuery" text="Run" accessibleText="Execute query" AnchorPane.rightAnchor="15.666666666666664" AnchorPane.topAnchor="280.0" />
-                              <Label layoutX="14.0" layoutY="280.0" text="LIMIT 1000" />
-                           </children>
-                        </AnchorPane>
                      </children></AnchorPane>
             </content>
           </Tab>
-          <Tab text="Schema">
+          <Tab text="Query">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -51,6 +41,15 @@
                      </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Schema">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="schemaTableView" layoutX="300.0" layoutY="152.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
       <ToolBar layoutY="1.0" prefHeight="40.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
